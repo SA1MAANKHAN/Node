@@ -1,6 +1,7 @@
 const User = require("../models/userModel");
 const AppError = require("../Utils/appError");
 const catchAsync = require("../Utils/catchAsync");
+const factory = require("./handlerFactory");
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -12,18 +13,18 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = async (req, res, next) => {
-  const users = await User.find();
+// exports.getAllUsers = async (req, res, next) => {
+//   const users = await User.find();
 
-  res.status(200).json({
-    status: "success",
-    requestedAt: res.requestTime,
-    results: users.length,
-    data: {
-      users,
-    },
-  });
-};
+//   res.status(200).json({
+//     status: "success",
+//     requestedAt: res.requestTime,
+//     results: users.length,
+//     data: {
+//       users,
+//     },
+//   });
+// };
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // create error if user posts password data
@@ -64,27 +65,16 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 exports.createUser = (req, res) => {
   res.status(500).json({
     status: "error",
-    message: "route not specified yet",
+    message: "This route is not defined. Please use sign up instead!",
   });
 };
 
-exports.updateUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "route not specified yet",
-  });
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
 };
 
-exports.deleteUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "route not specified yet",
-  });
-};
-
-exports.getUser = (req, res) => {
-  res.status(500).json({
-    status: "error",
-    message: "route not specified yet",
-  });
-};
+exports.deleteUser = factory.deleteOne(User);
+exports.updateUser = factory.updateOne(User);
+exports.getUser = factory.getOne(User);
+exports.getAllUsers = factory.getAll(User);
