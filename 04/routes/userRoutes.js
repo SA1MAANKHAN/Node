@@ -1,8 +1,6 @@
-const fs = require("fs");
+const express = require("express");
 const authController = require("../controllers/authController");
 const userController = require("../controllers/userController");
-
-const express = require("express");
 
 const router = express.Router();
 
@@ -21,7 +19,12 @@ router.patch(
   authController.updatePassword
 );
 
-router.patch("/updateMe", userController.updateMe);
+router.patch(
+  "/updateMe",
+  userController.uploadUserPhoto,
+  userController.resizeUserPhoto,
+  userController.updateMe
+);
 router.delete("/deleteMe", userController.deleteMe);
 router.get(
   "/me",
